@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html>
+<body onload="LoadData(); CheckCookie();" style="margin: 0;">
+
+
+<style>
+
+#Navigation{
+
+    overflow: hidden;
+    background-color: #333;
+}
+
+#Navigation a{
+
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+    
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+}
+
+#Navigation a:hover{
+
+    background-color: #04AA6D;
+    color: #f2f2f2;
+    
+}
+
+#Navigation a.active{
+
+    background-color: #04AA6D;
+    color: white;
+
+}
+
+table tr:nth-child(odd){background-color: #cfcfcf;}
+table tr:hover{background-color: #b7b5b5;}
+
+
+table,tbody,th,td{
+
+    border: 1px solid black;
+    border-collapse: collapse;
+    font-size: 30px;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+
+}
+
+th{
+
+    background-color: #04AA6D;
+    color: white;
+
+}
+
+
+#LogoutButton{background-color: #3d3c3c; display: none;}
+#LogoutButton:hover{background-color: #04AA6D;}
+
+
+#AccountInfoButton{background-color: #3d3c3c; display: none;}
+#AccountInfoButton:hover{background-color: #04AA6D;}
+
+
+#RegisterButton{
+    width: 90px;
+    height: 40px;
+    background-color: #04AA6D;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 7px #06764b;
+    color: #fff;
+}
+#RegisterButton:hover{background-color: #3e8e41}
+#RegisterButton:active{
+    background-color: #3e8e41;
+    box-shadow: 0 5px #066c45;
+    transform:translateY(4px);
+}
+
+#LoginButton{
+    width: 90px;
+    height: 40px;
+    background-color: #07c0c0;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 7px #057979;
+    color: #fff;
+}
+#LoginButton:hover{background-color: #0b9898;}
+#LoginButton:active{
+    background-color: #0b9898;
+    box-shadow: 0 5px #057979;
+    transform: translateY(4px);
+}
+
+#DisplayUsernames{
+
+    width: 90px;
+    height: 40px;
+    background-color: #FF0000;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 7px #a10606;
+    color: #fff;
+
+}
+#DisplayUsernames:hover{background-color: #ce1515;}
+#DisplayUsernames:active{
+    background-color: #ce1515;
+    box-shadow: 0 5px #a10606;
+    transform: translateY(4px);
+}
+
+
+
+#Container1{
+
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translateY(-30%);
+    transform: translateX(-50%);
+
+}
+
+
+
+#LoginInput{
+
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+    padding-top: 60px;
+
+}
+
+.Modal-content{
+
+    background-color: #fefefe;
+    margin: 5% auto 15% auto;
+    border: 1px solid#888;
+    width: 30%;
+    height: 60%;
+    border-radius: 10px;
+}
+
+#CloseButton:hover{
+
+    color: red;
+
+}
+
+#SubmitButton{
+
+    background-color:#1dbc82;
+
+}
+
+#SubmitButton:hover{
+
+    background-color: #139364;
+
+}
+
+#ErrorMessage{
+
+    display: none;
+
+}
+
+.animate{
+
+    -webkit-animation: animatezoom 0.6s;
+    animation: animatezoom 0.6s
+}
+
+@keyframes animatezoom{
+
+    from{transform: scale(0)}
+    to{transform: scale(1)}
+}
+
+@keyframes animatezoom{
+
+    from{transform: scale(0)}
+    to{transform: scale(1)}
+
+}
+
+</style>
+
+
+<div id="Navigation">
+    <a id="Home" href="Homepage.html" style="background-color: #04AA6D;">Home</a>
+    <a href="Settings.html">Settings</a>
+    <a id="SignInMessage" style="float: right;" onclick="Logout();">Not signed in</a>
+</div>
+
+<div>
+    <a id="LogoutButton" style="float: right; font-size: 17px; padding-right: 30px; padding: 14px 38px;color: #fefefe;" onclick="ResetCookie();">Logout</a>
+    <a id="AccountInfoButton" style="float: right; font-size: 17px; padding-right: 30px; padding: 14px; color: #fefefe;">Account Info</a>
+</div>
+
+<h1>This is the homepage</h1>
+<h2 id="message">Void</h2>
+<h1 id="message1"></h1>
+
+
+<button id="RegisterButton" onclick="RedirectPage();">Register</button><br><br>
+<button onclick="document.getElementById('LoginInput').style.display='block'"id="LoginButton">Login</button><br><br>
+<button id="DisplayUsernames" onclick="ToggleButton();">View accounts</button>
+
+<table style="margin-left: auto; margin-right: auto;">
+<tbody id="tbody" style="display: none;">
+    <tr><th>Usernames</th></tr>
+</tbody>
+</table>
+
+
+
+<div id="LoginInput">
+<div class="Modal-content animate">
+<div id="Container1">
+
+<p style="position: absolute;top: -50%; font-size: 30px;">Login</p>
+
+<label style="font-size: 20px;padding-left: 5px;"for="Username">Username</label><br>
+<input style="width: 300px; height: 40px; border-radius: 20px;padding-left: 10px;font-size: 20px;"type="text" id="Username" name="Username" placeholder="Enter Username"></input><br><br>
+<label style="font-size: 20px;padding-left: 5px;"for="Password">Password</label><br>
+<input style="width: 300px; height: 40px; border-radius: 20px;padding-left: 10px;font-size: 20px;"type="Password" id="Password" name="Password" placeholder="Enter Password"></input><br><br>
+<button onclick="VerifyUserID();" style="position: absolute; left: 50%; transform: translateX(-50%);width: 300px; height: 40px; border-radius: 20px;font-size: 20px;font-weight: bold; color: white;"id="SubmitButton">Login</button>
+<button onclick="document.getElementById('LoginInput').style.display='none' "style="position: absolute; top: -40%;right: -10%;background-color: white;border: none; font-size: 25px; font-weight: bold;"id="CloseButton">x</button>
+<p id="ErrorMessage" style="position: absolute; top: 130%; transform: translateY(-130%); left: 45%; transform: translateX(-50%); font-size: 20px;text-align: center;"></p>
+
+</div>
+</div>
+</div>
+
+
+<script>
+
+    Toggle1=false
+
+    function Logout() {
+        if(document.getElementById("SignInMessage").innerHTML!="Not signed in") {
+            if(Toggle1==false) {
+                document.getElementById("LogoutButton").style.display="block";
+                document.getElementById("AccountInfoButton").style.display="block";
+                Toggle1=true;
+            }
+            else if(Toggle1==true) {
+                document.getElementById("LogoutButton").style.display="none";
+                document.getElementById("AccountInfoButton").style.display="none";
+                Toggle1=false;
+            }
+        }
+    }
+    
+    
+    var Toggle=false
+    function ToggleButton() {
+
+        if(Toggle==false) {
+            document.getElementById("tbody").style.display="block";
+            Toggle=true;
+        }
+        else if(Toggle=true) {
+            document.getElementById("tbody").style.display="none";
+            Toggle=false;
+        }
+    }
+
+    window.onclick=function(event) {
+        if(event.target==document.getElementById("LoginInput")) {
+            document.getElementById("LoginInput").style.display="none";
+        }
+    }
+
+    function ResetCookie() {
+        document.cookie="Username=";
+        window.location.href="Homepage.html";
+    }
+
+    function SetCookie(Username) {
+
+        DaysToExpire=7;
+        var date=new Date();
+        date.setTime(date.getTime()+(DaysToExpire*24*60*60*1000));
+        var expires="expires="+date.toUTCString();
+        document.cookie="Username="+Username+";"+expires+";path=/";
+    }
+
+    function GetCookie() {
+
+        var Name="Username=";
+        var DecodedCookie=decodeURIComponent(document.cookie);
+        var ca=DecodedCookie.split(";");   
+        for(var i=0; i<ca.length; i++) {
+            var c=ca[i];
+            while(c.charAt(0)==" ") {
+                c=c.substring(1);
+            }
+            if(c.indexOf(Name)==0) {
+                return c.substring(Name.length, c.length);
+            }
+        }
+        return "";
+    }
+
+    function CheckCookie() {
+        var Username=GetCookie();
+        if(Username!="") {
+            document.getElementById("SignInMessage").innerHTML="Signed in as "+Username;
+        }
+    }
+
+    function VerifyUserID() {
+
+        Username=document.getElementById("Username").value;
+        Password=document.getElementById("Password").value;
+
+
+        for(var i=0; TableData.length-1; i++) {
+            if(TableData[i].Username==Username && TableData[i].Password==Password) {
+
+                document.getElementById("ErrorMessage").style.display="block";
+                document.getElementById("ErrorMessage").style.color="green";
+                document.getElementById("ErrorMessage").innerHTML="Successfully logged in!";
+                document.getElementById("SignInMessage").innerHTML="Signed in as "+Username;
+                SetCookie(Username);
+                break;
+            }
+
+            else if(i==TableData.length-1 && (TableData[i].Username!=Username || TableData[i].Password!=Password)) {
+
+                document.getElementById("ErrorMessage").style.display="block";
+                document.getElementById("ErrorMessage").style.color="red";
+                document.getElementById("ErrorMessage").innerHTML="Username or password incorrect!";
+                break;
+            }
+        }
+    }
+
+
+
+    var TableData;
+
+    function LoadData() {
+
+        var xhttp=new XMLHttpRequest();
+        xhttp.open("POST","/requestData");
+        xhttp.setRequestHeader("Content-type","application/JSON");
+        xhttp.send();
+        RunFunction=false;
+        console.log("Request for the data has been sent");
+
+        xhttp.onreadystatechange=function() {
+
+            if(this.readyState==4 && this.status==200) {
+
+                ResponseText=this.responseText;
+                ResponseText.replace(/'/g,'"');
+                ResponseText=JSON.parse(ResponseText);
+
+                document.getElementById("message").innerHTML="Data recieved";
+                console.log("The data has been recieved");
+                TableData=ResponseText;
+            }
+
+            if(ResponseText!="Void") {
+
+                DisplayTable();
+
+            }
+
+            if(ResponseText=="Void"){
+
+                alert("Refresh page");
+                window.locatiot.href="Homepage.html";
+
+            }
+        }
+    }
+
+
+    function DisplayTable() {
+
+        console.log(TableData);
+
+        for(var i=0;TableData.length-1;i++) {
+
+            Username=TableData[i].Username;
+            document.getElementById("tbody").innerHTML+="<tr><td>"+Username+"</tr></td>";
+
+        }
+
+    }
+
+
+    function RedirectPage() {
+
+        window.location.href="Index.html";
+
+    }
+
+</script>
+
+
+</body>
+</html>
